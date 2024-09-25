@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class PhoneFormatter extends TextInputFormatter {
@@ -10,7 +9,7 @@ class PhoneFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.length > 0) {
+    if (newValue.text.isNotEmpty) {
       var isNumber = RegExp(r'[0-9]');
       if (!isNumber.hasMatch(newValue.text[newValue.text.length - 1])) {
         if (newValue.text.length < oldValue.text.length) {

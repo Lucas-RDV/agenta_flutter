@@ -5,25 +5,31 @@ import 'package:flutter/services.dart';
 
 class Cadastro extends StatefulWidget {
   final ContatoList contatos;
-  Cadastro({required this.contatos});
+  final Contato contato;
+  const Cadastro({super.key, required this.contatos, this.contato = const Contato(nome: '', email: '', telefone: '')});
   @override
-  State createState() => CadastroState(contatos: contatos);
+  State createState() => CadastroState(contatos: contatos, contato: contato);
 }
 
 class CadastroState extends State {
   ContatoList contatos;
+  Contato contato;
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController telefoneController = TextEditingController();
   final formKeyCadastro = GlobalKey<FormState>();
-  CadastroState({required this.contatos});
+  CadastroState({required this.contatos, required this.contato}) {
+    nomeController.text = contato.nome;
+    emailController.text = contato.email;
+    telefoneController.text = contato.telefone;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: Text('Cadastro de contato'),
+        title: const Text('Cadastro de contato'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -33,7 +39,7 @@ class CadastroState extends State {
             children: [
               TextFormField(
                 controller: nomeController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Nome',
                   border: OutlineInputBorder(),
                 ),
@@ -44,11 +50,11 @@ class CadastroState extends State {
                   return null;
                 },
               ), // nome field
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'E-mail',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.email),
@@ -71,14 +77,14 @@ class CadastroState extends State {
                   return null;
                 },
               ), // email field
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextFormField(
                 inputFormatters: <TextInputFormatter>[
                   PhoneFormatter(),
                 ],
                 controller: telefoneController,
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'telefone',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.phone),
@@ -95,10 +101,10 @@ class CadastroState extends State {
                 },
               ), // telefone
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () => Salvar(),
-                child: Text('Salvar'),
+                onPressed: () => salvar(),
+                child: const Text('Salvar'),
               ),
             ],
           ),
@@ -107,7 +113,7 @@ class CadastroState extends State {
     );
   }
 
-  void Salvar() {
+  void salvar() {
     if (formKeyCadastro.currentState!.validate()) {
       Contato novoContato = Contato(
           nome: nomeController.text,

@@ -1,12 +1,11 @@
 import 'package:agenda_flutter/cadastro.dart';
 import 'package:agenda_flutter/contato.dart';
-import 'package:agenda_flutter/editar.dart';
 import 'package:flutter/material.dart';
 
 class Listagem extends StatefulWidget {
   final ContatoList contatos = ContatoList();
   final Contato teste =
-      Contato(nome: 'nome', telefone: 'telefone', email: 'email');
+      const Contato(nome: 'nome', telefone: 'telefone', email: 'email');
 
   Listagem({super.key});
 
@@ -24,10 +23,10 @@ class ListagemState extends State<Listagem> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: Text('Agenda Irada'),
+        title: const Text('Agenda Irada'),
         actions: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 50),
+            margin: const EdgeInsets.symmetric(horizontal: 50),
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.white,
@@ -88,7 +87,7 @@ class ListagemState extends State<Listagem> {
                     Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Editar(contato: contatos.getContatos()[index],contatos: contatos),
+                    builder: (context) => Cadastro(contato: contatos.getContatos()[index],contatos: contatos),
                   ),
                 ).then((novoContato) {
                   if (novoContato != null) {
@@ -97,12 +96,12 @@ class ListagemState extends State<Listagem> {
                     });
                   }
                 });
-                  }, child: Text("Editar")),
+                  }, child: const Text("Editar")),
                   ElevatedButton(onPressed: () {
                     setState(() {
                       contatos.getContatos().removeAt(index);
                     });
-                  }, child: Text("deletar")),
+                  }, child: const Text("deletar")),
                 ],
               ),
             ),

@@ -1,9 +1,9 @@
 class Contato {
-  String nome;
-  String email;
-  String telefone;
+  final String nome;
+  final String email;
+  final String telefone;
 
-  Contato({required this.nome, this.email = "", this.telefone = ""});
+  const Contato({required this.nome, this.email = "", this.telefone = ""});
 }
 
 class ContatoList {
