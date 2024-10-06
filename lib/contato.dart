@@ -1,19 +1,32 @@
+
 class Contato {
+  final int? id;  
   final String nome;
   final String email;
   final String telefone;
 
-  const Contato({required this.nome, this.email = "", this.telefone = ""});
-}
+  const Contato({this.id, this.nome = '', this.email = '', this.telefone = ''});
 
-class ContatoList {
-  List<Contato> contatos = [];
-
-  addContato(Contato c) {
-    contatos.add(c);
+  factory Contato.fromMap(Map<String, dynamic> map) {
+    return Contato(
+      id: map['id'],
+      nome: map['nome'],
+      email: map['email'],
+      telefone: map['telefone'],
+    );
   }
 
-  List<Contato> getContatos() {
-    return contatos;
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nome': nome,
+      'email': email,
+      'telefone': telefone,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'Contato(id: $id, nome: $nome, email: $email, telefone: $telefone)';
   }
 }

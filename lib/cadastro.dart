@@ -1,24 +1,25 @@
+import 'dart:math';
+
 import 'package:agenda_flutter/contato.dart';
 import 'package:agenda_flutter/phoneFormatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Cadastro extends StatefulWidget {
-  final ContatoList contatos;
   final Contato contato;
-  const Cadastro({super.key, required this.contatos, this.contato = const Contato(nome: '', email: '', telefone: '')});
+  const Cadastro(
+      {super.key, this.contato = const Contato()});
   @override
-  State createState() => CadastroState(contatos: contatos, contato: contato);
+  State createState() => CadastroState(contato: contato);
 }
 
 class CadastroState extends State {
-  ContatoList contatos;
   Contato contato;
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController telefoneController = TextEditingController();
   final formKeyCadastro = GlobalKey<FormState>();
-  CadastroState({required this.contatos, required this.contato}) {
+  CadastroState({ required this.contato}) {
     nomeController.text = contato.nome;
     emailController.text = contato.email;
     telefoneController.text = contato.telefone;
@@ -115,7 +116,10 @@ class CadastroState extends State {
 
   void salvar() {
     if (formKeyCadastro.currentState!.validate()) {
+      var idGenerator = Random();
+      var generatedId = idGenerator.nextInt(999);
       Contato novoContato = Contato(
+          id: generatedId,
           nome: nomeController.text,
           email: emailController.text,
           telefone: telefoneController.text);

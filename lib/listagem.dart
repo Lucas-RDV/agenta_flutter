@@ -1,22 +1,52 @@
 import 'package:agenda_flutter/cadastro.dart';
 import 'package:agenda_flutter/contato.dart';
 import 'package:flutter/material.dart';
+import 'database.dart';
 
 class Listagem extends StatefulWidget {
-  final ContatoList contatos = ContatoList();
-  final Contato teste =
-      const Contato(nome: 'nome', telefone: 'telefone', email: 'email');
-
   Listagem({super.key});
 
   @override
-  State<Listagem> createState() => ListagemState(contatos: contatos);
+  State<Listagem> createState() => ListagemState();
 }
 
 class ListagemState extends State<Listagem> {
-  ContatoList contatos;
+  final dbHelper = DatabaseHelper();
+  List<Contato> contatos = [];
 
-  ListagemState({required this.contatos});
+  ListagemState();
+
+  @override
+  void initState() {
+    super.initState();
+    loadContatos();
+  }
+
+  void loadContatos() async {
+    List<Contato> loadedContatos = await dbHelper.getContatos();
+    setState(() {
+      contatos = loadedContatos;
+    });
+  }
+
+    void addContato(Contato novoContato) async {
+    await dbHelper.newContato(novoContato);
+    loadContatos();
+  }
+
+  void updateContato(Contato contatoAtualizado, int index) async {
+    await dbHelper.atualizarContato(contatoAtualizado);
+    setState(() {
+      contatos[index] = contatoAtualizado;
+    });
+  }
+
+  void deleteContato(int id, int index) async {
+    await dbHelper.deletarContato(id);
+    setState(() {
+      contatos.removeAt(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +74,11 @@ class ListagemState extends State<Listagem> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Cadastro(contatos: contatos),
+                    builder: (context) => Cadastro(),
                   ),
                 ).then((novoContato) {
                   if (novoContato != null) {
-                    setState(() {
-                      contatos.getContatos().add(novoContato);
-                    });
+                    addContato(novoContato);
                   }
                 });
               },
@@ -59,9 +87,9 @@ class ListagemState extends State<Listagem> {
         ],
       ),
       body: ListView.builder(
-        itemCount: contatos.getContatos().length,
+        itemCount: contatos.length,
         itemBuilder: (context, index) {
-          Contato c = contatos.getContatos()[index];
+          Contato c = contatos[index];
           return Container(
             decoration: BoxDecoration(
               border: Border.all(
@@ -85,23 +113,19 @@ class ListagemState extends State<Listagem> {
                   ),
                   ElevatedButton(onPressed: () {
                     Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Cadastro(contato: contatos.getContatos()[index],contatos: contatos),
-                  ),
-                ).then((novoContato) {
-                  if (novoContato != null) {
-                    setState(() {
-                      contatos.getContatos()[index] = novoContato;
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Cadastro(contato: c),
+                      ),
+                    ).then((novoContato) {
+                      if (novoContato != null) {
+                        updateContato(novoContato, index);
+                      }
                     });
-                  }
-                });
                   }, child: const Text("Editar")),
                   ElevatedButton(onPressed: () {
-                    setState(() {
-                      contatos.getContatos().removeAt(index);
-                    });
-                  }, child: const Text("deletar")),
+                    deleteContato(c.id!, index);  // Deleta o contato pelo ID
+                  }, child: const Text("Deletar")),
                 ],
               ),
             ),
@@ -110,4 +134,6 @@ class ListagemState extends State<Listagem> {
       ),
     );
   }
+
+
 }
